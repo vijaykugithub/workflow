@@ -1,0 +1,69 @@
+﻿@model IEnumerable<WorkflowProcess.Data.Project>
+
+@{
+    ViewBag.Title = "Index";
+    if (Convert.ToInt32(Session["Role"]) == 2)
+    {
+        Layout = "~/Views/Shared/_LayoutUser.cshtml";
+    }
+    else if (Convert.ToInt32(Session["Role"]) == 3)
+    {
+        Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_LayoutSuperAdmin.cshtml";
+    }
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ProjectName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProjectStartDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProjectEndDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProjectStatus.ProjectStatusName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.WorkFlow.WorkflowName)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProjectName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProjectStartDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProjectEndDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProjectStatus.ProjectStatusName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.WorkFlow.WorkflowName)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ProjectId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ProjectId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ProjectId })
+        </td>
+    </tr>
+}
+
+</table>

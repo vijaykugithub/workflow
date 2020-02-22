@@ -1,0 +1,40 @@
+﻿@model IEnumerable<WorkflowProcess.Data.ProjectStatus>
+
+@{
+    ViewBag.Title = "Index";
+    if (Convert.ToInt32(Session["Role"]) == 3)
+    {
+        Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_LayoutSuperAdmin.cshtml";
+    }
+}
+
+<h2>Project Status</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ProjectStatusName)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProjectStatusName)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ProjectStatusId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ProjectStatusId })
+        </td>
+    </tr>
+}
+
+</table>

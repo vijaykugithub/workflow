@@ -1,0 +1,74 @@
+﻿@model WorkflowProcess.Data.WorkflowActivityStream
+
+@{
+    ViewBag.Title = "Details";
+    if (Convert.ToInt32(Session["Role"]) == 3)
+    {
+        Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_LayoutSuperAdmin.cshtml";
+    }
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>WorkflowActivityStream</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Predecessor)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Predecessor)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Successor)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Successor)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.JumpTo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.JumpTo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UserName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UserName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Activity.ActivityName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Activity.ActivityName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.WorkFlow.WorkflowName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.WorkFlow.WorkflowName)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.WorkflowActivityStreamID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,0 +1,58 @@
+﻿@model WorkflowProcess.Data.WorkFlow
+
+@{
+    ViewBag.Title = "Details";
+    if (Convert.ToInt32(Session["Role"]) == 3)
+    {
+        Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_LayoutSuperAdmin.cshtml";
+    }
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>WorkFlow</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.WorkflowName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.WorkflowName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.WorkflowDescription)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.WorkflowDescription)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UserName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UserName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Customer.CustomerName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Customer.CustomerName)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.WorkflowID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,0 +1,792 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="WorkflowModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Activity">
+          <Key>
+            <PropertyRef Name="ActivityId" />
+          </Key>
+          <Property Name="ActivityId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CustomerId" Type="int" />
+          <Property Name="ActivityName" Type="varchar" MaxLength="100" />
+          <Property Name="ActivityDescription" Type="varchar(max)" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="ActivityStatus">
+          <Key>
+            <PropertyRef Name="ActivityStatusId" />
+          </Key>
+          <Property Name="ActivityStatusId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ActivityStatusName" Type="varchar" MaxLength="100" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="CustomerId" />
+          </Key>
+          <Property Name="CustomerId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CustomerName" Type="varchar" MaxLength="100" />
+          <Property Name="CustomerAddress" Type="varchar(max)" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="50" />
+          <Property Name="CompanyName" Type="nvarchar(max)" />
+          <Property Name="Status" Type="bit" />
+          <Property Name="CreatedBy" Type="bigint" />
+          <Property Name="CustomerEmail" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="Project">
+          <Key>
+            <PropertyRef Name="ProjectId" />
+          </Key>
+          <Property Name="ProjectId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProjectName" Type="varchar" MaxLength="100" />
+          <Property Name="ProjectStartDate" Type="datetime" />
+          <Property Name="ProjectEndDate" Type="datetime" />
+          <Property Name="ProjectStatusId" Type="int" />
+          <Property Name="WorkflowActivityID" Type="int" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="ProjectActivity">
+          <Key>
+            <PropertyRef Name="ProjectActivityId" />
+          </Key>
+          <Property Name="ProjectActivityId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProjectId" Type="int" />
+          <Property Name="ActivityId" Type="int" />
+          <Property Name="ActivityStatusId" Type="int" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="ProjectActivityConfiguration">
+          <Key>
+            <PropertyRef Name="ProjectActivityConfigurationId" />
+          </Key>
+          <Property Name="ProjectActivityConfigurationId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProjectId" Type="int" />
+          <Property Name="ActivityId" Type="int" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="ProjectStatus">
+          <Key>
+            <PropertyRef Name="ProjectStatusId" />
+          </Key>
+          <Property Name="ProjectStatusId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProjectStatusName" Type="varchar" MaxLength="100" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="ProjectUser">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserName" Type="varchar" MaxLength="100" />
+          <Property Name="UserEmail" Type="varchar" MaxLength="100" />
+          <Property Name="CustomerId" Type="int" />
+          <Property Name="ParentUserEmail" Type="nvarchar" MaxLength="128" />
+          <Property Name="UserPassword" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="WorkFlow">
+          <Key>
+            <PropertyRef Name="WorkflowID" />
+          </Key>
+          <Property Name="WorkflowID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CustomerID" Type="int" />
+          <Property Name="WorkflowName" Type="varchar" MaxLength="100" />
+          <Property Name="WorkflowDescription" Type="varchar(max)" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="WorkflowActivityStream">
+          <Key>
+            <PropertyRef Name="WorkflowActivityStreamID" />
+          </Key>
+          <Property Name="WorkflowActivityStreamID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="WorkflowID" Type="int" />
+          <Property Name="ActivityID" Type="int" />
+          <Property Name="Predecessor" Type="int" />
+          <Property Name="Successor" Type="int" />
+          <Property Name="JumpTo" Type="int" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <Association Name="FK__Activity__Custom__31B762FC">
+          <End Role="Customer" Type="Self.Customer" Multiplicity="0..1" />
+          <End Role="Activity" Type="Self.Activity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="Activity">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Project__Project__32AB8735">
+          <End Role="ProjectStatus" Type="Self.ProjectStatus" Multiplicity="0..1" />
+          <End Role="Project" Type="Self.Project" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProjectStatus">
+              <PropertyRef Name="ProjectStatusId" />
+            </Principal>
+            <Dependent Role="Project">
+              <PropertyRef Name="ProjectStatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Project__Workflo__339FAB6E">
+          <End Role="WorkFlow" Type="Self.WorkFlow" Multiplicity="0..1" />
+          <End Role="Project" Type="Self.Project" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkFlow">
+              <PropertyRef Name="WorkflowID" />
+            </Principal>
+            <Dependent Role="Project">
+              <PropertyRef Name="WorkflowActivityID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ProjectAc__Activ__3493CFA7">
+          <End Role="Activity" Type="Self.Activity" Multiplicity="0..1" />
+          <End Role="ProjectActivity" Type="Self.ProjectActivity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Activity">
+              <PropertyRef Name="ActivityId" />
+            </Principal>
+            <Dependent Role="ProjectActivity">
+              <PropertyRef Name="ActivityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ProjectAc__Activ__3587F3E0">
+          <End Role="ActivityStatus" Type="Self.ActivityStatus" Multiplicity="0..1" />
+          <End Role="ProjectActivity" Type="Self.ProjectActivity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ActivityStatus">
+              <PropertyRef Name="ActivityStatusId" />
+            </Principal>
+            <Dependent Role="ProjectActivity">
+              <PropertyRef Name="ActivityStatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ProjectAc__Activ__37703C52">
+          <End Role="Activity" Type="Self.Activity" Multiplicity="0..1" />
+          <End Role="ProjectActivityConfiguration" Type="Self.ProjectActivityConfiguration" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Activity">
+              <PropertyRef Name="ActivityId" />
+            </Principal>
+            <Dependent Role="ProjectActivityConfiguration">
+              <PropertyRef Name="ActivityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ProjectAc__Proje__367C1819">
+          <End Role="Project" Type="Self.Project" Multiplicity="0..1" />
+          <End Role="ProjectActivity" Type="Self.ProjectActivity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project">
+              <PropertyRef Name="ProjectId" />
+            </Principal>
+            <Dependent Role="ProjectActivity">
+              <PropertyRef Name="ProjectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ProjectAc__Proje__3864608B">
+          <End Role="Project" Type="Self.Project" Multiplicity="0..1" />
+          <End Role="ProjectActivityConfiguration" Type="Self.ProjectActivityConfiguration" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project">
+              <PropertyRef Name="ProjectId" />
+            </Principal>
+            <Dependent Role="ProjectActivityConfiguration">
+              <PropertyRef Name="ProjectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__WorkFlow__Custom__3A4CA8FD">
+          <End Role="Customer" Type="Self.Customer" Multiplicity="0..1" />
+          <End Role="WorkFlow" Type="Self.WorkFlow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="WorkFlow">
+              <PropertyRef Name="CustomerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__WorkflowA__Activ__3B40CD36">
+          <End Role="Activity" Type="Self.Activity" Multiplicity="0..1" />
+          <End Role="WorkflowActivityStream" Type="Self.WorkflowActivityStream" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Activity">
+              <PropertyRef Name="ActivityId" />
+            </Principal>
+            <Dependent Role="WorkflowActivityStream">
+              <PropertyRef Name="ActivityID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__WorkflowA__Workf__3C34F16F">
+          <End Role="WorkFlow" Type="Self.WorkFlow" Multiplicity="0..1" />
+          <End Role="WorkflowActivityStream" Type="Self.WorkflowActivityStream" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkFlow">
+              <PropertyRef Name="WorkflowID" />
+            </Principal>
+            <Dependent Role="WorkflowActivityStream">
+              <PropertyRef Name="WorkflowID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProjectUser_ProjectUser">
+          <End Role="Customer" Type="Self.Customer" Multiplicity="0..1" />
+          <End Role="ProjectUser" Type="Self.ProjectUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="ProjectUser">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="WorkflowModelStoreContainer">
+          <EntitySet Name="Activity" EntityType="Self.Activity" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ActivityStatus" EntityType="Self.ActivityStatus" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Customer" EntityType="Self.Customer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Project" EntityType="Self.Project" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProjectActivity" EntityType="Self.ProjectActivity" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProjectActivityConfiguration" EntityType="Self.ProjectActivityConfiguration" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProjectStatus" EntityType="Self.ProjectStatus" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProjectUser" EntityType="Self.ProjectUser" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WorkFlow" EntityType="Self.WorkFlow" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WorkflowActivityStream" EntityType="Self.WorkflowActivityStream" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Activity__Custom__31B762FC" Association="Self.FK__Activity__Custom__31B762FC">
+            <End Role="Customer" EntitySet="Customer" />
+            <End Role="Activity" EntitySet="Activity" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Project__Project__32AB8735" Association="Self.FK__Project__Project__32AB8735">
+            <End Role="ProjectStatus" EntitySet="ProjectStatus" />
+            <End Role="Project" EntitySet="Project" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Project__Workflo__339FAB6E" Association="Self.FK__Project__Workflo__339FAB6E">
+            <End Role="WorkFlow" EntitySet="WorkFlow" />
+            <End Role="Project" EntitySet="Project" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ProjectAc__Activ__3493CFA7" Association="Self.FK__ProjectAc__Activ__3493CFA7">
+            <End Role="Activity" EntitySet="Activity" />
+            <End Role="ProjectActivity" EntitySet="ProjectActivity" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ProjectAc__Activ__3587F3E0" Association="Self.FK__ProjectAc__Activ__3587F3E0">
+            <End Role="ActivityStatus" EntitySet="ActivityStatus" />
+            <End Role="ProjectActivity" EntitySet="ProjectActivity" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ProjectAc__Activ__37703C52" Association="Self.FK__ProjectAc__Activ__37703C52">
+            <End Role="Activity" EntitySet="Activity" />
+            <End Role="ProjectActivityConfiguration" EntitySet="ProjectActivityConfiguration" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ProjectAc__Proje__367C1819" Association="Self.FK__ProjectAc__Proje__367C1819">
+            <End Role="Project" EntitySet="Project" />
+            <End Role="ProjectActivity" EntitySet="ProjectActivity" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ProjectAc__Proje__3864608B" Association="Self.FK__ProjectAc__Proje__3864608B">
+            <End Role="Project" EntitySet="Project" />
+            <End Role="ProjectActivityConfiguration" EntitySet="ProjectActivityConfiguration" />
+          </AssociationSet>
+          <AssociationSet Name="FK__WorkFlow__Custom__3A4CA8FD" Association="Self.FK__WorkFlow__Custom__3A4CA8FD">
+            <End Role="Customer" EntitySet="Customer" />
+            <End Role="WorkFlow" EntitySet="WorkFlow" />
+          </AssociationSet>
+          <AssociationSet Name="FK__WorkflowA__Activ__3B40CD36" Association="Self.FK__WorkflowA__Activ__3B40CD36">
+            <End Role="Activity" EntitySet="Activity" />
+            <End Role="WorkflowActivityStream" EntitySet="WorkflowActivityStream" />
+          </AssociationSet>
+          <AssociationSet Name="FK__WorkflowA__Workf__3C34F16F" Association="Self.FK__WorkflowA__Workf__3C34F16F">
+            <End Role="WorkFlow" EntitySet="WorkFlow" />
+            <End Role="WorkflowActivityStream" EntitySet="WorkflowActivityStream" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProjectUser_ProjectUser" Association="Self.FK_ProjectUser_ProjectUser">
+            <End Role="Customer" EntitySet="Customer" />
+            <End Role="ProjectUser" EntitySet="ProjectUser" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="WorkflowModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Activity">
+          <Key>
+            <PropertyRef Name="ActivityId" />
+          </Key>
+          <Property Name="ActivityId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerId" Type="Int32" />
+          <Property Name="ActivityName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ActivityDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Customer" Relationship="Self.FK__Activity__Custom__31B762FC" FromRole="Activity" ToRole="Customer" />
+          <NavigationProperty Name="ProjectActivity" Relationship="Self.FK__ProjectAc__Activ__3493CFA7" FromRole="Activity" ToRole="ProjectActivity" />
+          <NavigationProperty Name="ProjectActivityConfiguration" Relationship="Self.FK__ProjectAc__Activ__37703C52" FromRole="Activity" ToRole="ProjectActivityConfiguration" />
+          <NavigationProperty Name="WorkflowActivityStream" Relationship="Self.FK__WorkflowA__Activ__3B40CD36" FromRole="Activity" ToRole="WorkflowActivityStream" />
+        </EntityType>
+        <EntityType Name="ActivityStatus">
+          <Key>
+            <PropertyRef Name="ActivityStatusId" />
+          </Key>
+          <Property Name="ActivityStatusId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ActivityStatusName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ProjectActivity" Relationship="Self.FK__ProjectAc__Activ__3587F3E0" FromRole="ActivityStatus" ToRole="ProjectActivity" />
+        </EntityType>
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="CustomerId" />
+          </Key>
+          <Property Name="CustomerId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CustomerAddress" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Activity" Relationship="Self.FK__Activity__Custom__31B762FC" FromRole="Customer" ToRole="Activity" />
+          <NavigationProperty Name="WorkFlow" Relationship="Self.FK__WorkFlow__Custom__3A4CA8FD" FromRole="Customer" ToRole="WorkFlow" />
+          <NavigationProperty Name="ProjectUser" Relationship="Self.FK_ProjectUser_ProjectUser" FromRole="Customer" ToRole="ProjectUser" />
+          <Property Name="CompanyName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Boolean" />
+          <Property Name="CreatedBy" Type="Int64" />
+          <Property Name="CustomerEmail" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Project">
+          <Key>
+            <PropertyRef Name="ProjectId" />
+          </Key>
+          <Property Name="ProjectId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProjectName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ProjectStartDate" Type="DateTime" Precision="3" />
+          <Property Name="ProjectEndDate" Type="DateTime" Precision="3" />
+          <Property Name="ProjectStatusId" Type="Int32" />
+          <Property Name="WorkflowActivityID" Type="Int32" />
+          <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="ProjectStatus" Relationship="Self.FK__Project__Project__32AB8735" FromRole="Project" ToRole="ProjectStatus" />
+          <NavigationProperty Name="WorkFlow" Relationship="Self.FK__Project__Workflo__339FAB6E" FromRole="Project" ToRole="WorkFlow" />
+          <NavigationProperty Name="ProjectActivity" Relationship="Self.FK__ProjectAc__Proje__367C1819" FromRole="Project" ToRole="ProjectActivity" />
+          <NavigationProperty Name="ProjectActivityConfiguration" Relationship="Self.FK__ProjectAc__Proje__3864608B" FromRole="Project" ToRole="ProjectActivityConfiguration" />
+        </EntityType>
+        <EntityType Name="ProjectActivity">
+          <Key>
+            <PropertyRef Name="ProjectActivityId" />
+          </Key>
+          <Property Name="ProjectActivityId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProjectId" Type="Int32" />
+          <Property Name="ActivityId" Type="Int32" />
+          <Property Name="ActivityStatusId" Type="Int32" />
+          <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Activity" Relationship="Self.FK__ProjectAc__Activ__3493CFA7" FromRole="ProjectActivity" ToRole="Activity" />
+          <NavigationProperty Name="ActivityStatus" Relationship="Self.FK__ProjectAc__Activ__3587F3E0" FromRole="ProjectActivity" ToRole="ActivityStatus" />
+          <NavigationProperty Name="Project" Relationship="Self.FK__ProjectAc__Proje__367C1819" FromRole="ProjectActivity" ToRole="Project" />
+        </EntityType>
+        <EntityType Name="ProjectActivityConfiguration">
+          <Key>
+            <PropertyRef Name="ProjectActivityConfigurationId" />
+          </Key>
+          <Property Name="ProjectActivityConfigurationId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProjectId" Type="Int32" />
+          <Property Name="ActivityId" Type="Int32" />
+          <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Activity" Relationship="Self.FK__ProjectAc__Activ__37703C52" FromRole="ProjectActivityConfiguration" ToRole="Activity" />
+          <NavigationProperty Name="Project" Relationship="Self.FK__ProjectAc__Proje__3864608B" FromRole="ProjectActivityConfiguration" ToRole="Project" />
+        </EntityType>
+        <EntityType Name="ProjectStatus">
+          <Key>
+            <PropertyRef Name="ProjectStatusId" />
+          </Key>
+          <Property Name="ProjectStatusId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProjectStatusName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Project" Relationship="Self.FK__Project__Project__32AB8735" FromRole="ProjectStatus" ToRole="Project" />
+        </EntityType>
+        <EntityType Name="ProjectUser">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="UserEmail" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CustomerId" Type="Int32" />
+          <Property Name="ParentUserEmail" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="UserPassword" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Customer" Relationship="Self.FK_ProjectUser_ProjectUser" FromRole="ProjectUser" ToRole="Customer" />
+        </EntityType>
+        <EntityType Name="WorkFlow">
+          <Key>
+            <PropertyRef Name="WorkflowID" />
+          </Key>
+          <Property Name="WorkflowID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CustomerID" Type="Int32" />
+          <Property Name="WorkflowName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="WorkflowDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Customer" Relationship="Self.FK__WorkFlow__Custom__3A4CA8FD" FromRole="WorkFlow" ToRole="Customer" />
+          <NavigationProperty Name="Project" Relationship="Self.FK__Project__Workflo__339FAB6E" FromRole="WorkFlow" ToRole="Project" />
+          <NavigationProperty Name="WorkflowActivityStream" Relationship="Self.FK__WorkflowA__Workf__3C34F16F" FromRole="WorkFlow" ToRole="WorkflowActivityStream" />
+        </EntityType>
+        <EntityType Name="WorkflowActivityStream">
+          <Key>
+            <PropertyRef Name="WorkflowActivityStreamID" />
+          </Key>
+          <Property Name="WorkflowActivityStreamID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="WorkflowID" Type="Int32" />
+          <Property Name="ActivityID" Type="Int32" />
+          <Property Name="Predecessor" Type="Int32" />
+          <Property Name="Successor" Type="Int32" />
+          <Property Name="JumpTo" Type="Int32" />
+          <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Activity" Relationship="Self.FK__WorkflowA__Activ__3B40CD36" FromRole="WorkflowActivityStream" ToRole="Activity" />
+          <NavigationProperty Name="WorkFlow" Relationship="Self.FK__WorkflowA__Workf__3C34F16F" FromRole="WorkflowActivityStream" ToRole="WorkFlow" />
+        </EntityType>
+        <Association Name="FK__Activity__Custom__31B762FC">
+          <End Role="Customer" Type="Self.Customer" Multiplicity="0..1" />
+          <End Role="Activity" Type="Self.Activity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="Activity">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ProjectAc__Activ__3493CFA7">
+          <End Role="Activity" Type="Self.Activity" Multiplicity="0..1" />
+          <End Role="ProjectActivity" Type="Self.ProjectActivity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Activity">
+              <PropertyRef Name="ActivityId" />
+            </Principal>
+            <Dependent Role="ProjectActivity">
+              <PropertyRef Name="ActivityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ProjectAc__Activ__37703C52">
+          <End Role="Activity" Type="Self.Activity" Multiplicity="0..1" />
+          <End Role="ProjectActivityConfiguration" Type="Self.ProjectActivityConfiguration" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Activity">
+              <PropertyRef Name="ActivityId" />
+            </Principal>
+            <Dependent Role="ProjectActivityConfiguration">
+              <PropertyRef Name="ActivityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__WorkflowA__Activ__3B40CD36">
+          <End Role="Activity" Type="Self.Activity" Multiplicity="0..1" />
+          <End Role="WorkflowActivityStream" Type="Self.WorkflowActivityStream" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Activity">
+              <PropertyRef Name="ActivityId" />
+            </Principal>
+            <Dependent Role="WorkflowActivityStream">
+              <PropertyRef Name="ActivityID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ProjectAc__Activ__3587F3E0">
+          <End Role="ActivityStatus" Type="Self.ActivityStatus" Multiplicity="0..1" />
+          <End Role="ProjectActivity" Type="Self.ProjectActivity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ActivityStatus">
+              <PropertyRef Name="ActivityStatusId" />
+            </Principal>
+            <Dependent Role="ProjectActivity">
+              <PropertyRef Name="ActivityStatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__WorkFlow__Custom__3A4CA8FD">
+          <End Role="Customer" Type="Self.Customer" Multiplicity="0..1" />
+          <End Role="WorkFlow" Type="Self.WorkFlow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="WorkFlow">
+              <PropertyRef Name="CustomerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProjectUser_ProjectUser">
+          <End Role="Customer" Type="Self.Customer" Multiplicity="0..1" />
+          <End Role="ProjectUser" Type="Self.ProjectUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customer">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="ProjectUser">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Project__Project__32AB8735">
+          <End Role="ProjectStatus" Type="Self.ProjectStatus" Multiplicity="0..1" />
+          <End Role="Project" Type="Self.Project" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProjectStatus">
+              <PropertyRef Name="ProjectStatusId" />
+            </Principal>
+            <Dependent Role="Project">
+              <PropertyRef Name="ProjectStatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Project__Workflo__339FAB6E">
+          <End Role="WorkFlow" Type="Self.WorkFlow" Multiplicity="0..1" />
+          <End Role="Project" Type="Self.Project" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkFlow">
+              <PropertyRef Name="WorkflowID" />
+            </Principal>
+            <Dependent Role="Project">
+              <PropertyRef Name="WorkflowActivityID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ProjectAc__Proje__367C1819">
+          <End Role="Project" Type="Self.Project" Multiplicity="0..1" />
+          <End Role="ProjectActivity" Type="Self.ProjectActivity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project">
+              <PropertyRef Name="ProjectId" />
+            </Principal>
+            <Dependent Role="ProjectActivity">
+              <PropertyRef Name="ProjectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ProjectAc__Proje__3864608B">
+          <End Role="Project" Type="Self.Project" Multiplicity="0..1" />
+          <End Role="ProjectActivityConfiguration" Type="Self.ProjectActivityConfiguration" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project">
+              <PropertyRef Name="ProjectId" />
+            </Principal>
+            <Dependent Role="ProjectActivityConfiguration">
+              <PropertyRef Name="ProjectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__WorkflowA__Workf__3C34F16F">
+          <End Role="WorkFlow" Type="Self.WorkFlow" Multiplicity="0..1" />
+          <End Role="WorkflowActivityStream" Type="Self.WorkflowActivityStream" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkFlow">
+              <PropertyRef Name="WorkflowID" />
+            </Principal>
+            <Dependent Role="WorkflowActivityStream">
+              <PropertyRef Name="WorkflowID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="WorkflowEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Activity" EntityType="Self.Activity" />
+          <EntitySet Name="ActivityStatus" EntityType="Self.ActivityStatus" />
+          <EntitySet Name="Customer" EntityType="Self.Customer" />
+          <EntitySet Name="Project" EntityType="Self.Project" />
+          <EntitySet Name="ProjectActivity" EntityType="Self.ProjectActivity" />
+          <EntitySet Name="ProjectActivityConfiguration" EntityType="Self.ProjectActivityConfiguration" />
+          <EntitySet Name="ProjectStatus" EntityType="Self.ProjectStatus" />
+          <EntitySet Name="ProjectUser" EntityType="Self.ProjectUser" />
+          <EntitySet Name="WorkFlow" EntityType="Self.WorkFlow" />
+          <EntitySet Name="WorkflowActivityStream" EntityType="Self.WorkflowActivityStream" />
+          <AssociationSet Name="FK__Activity__Custom__31B762FC" Association="Self.FK__Activity__Custom__31B762FC">
+            <End Role="Customer" EntitySet="Customer" />
+            <End Role="Activity" EntitySet="Activity" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ProjectAc__Activ__3493CFA7" Association="Self.FK__ProjectAc__Activ__3493CFA7">
+            <End Role="Activity" EntitySet="Activity" />
+            <End Role="ProjectActivity" EntitySet="ProjectActivity" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ProjectAc__Activ__37703C52" Association="Self.FK__ProjectAc__Activ__37703C52">
+            <End Role="Activity" EntitySet="Activity" />
+            <End Role="ProjectActivityConfiguration" EntitySet="ProjectActivityConfiguration" />
+          </AssociationSet>
+          <AssociationSet Name="FK__WorkflowA__Activ__3B40CD36" Association="Self.FK__WorkflowA__Activ__3B40CD36">
+            <End Role="Activity" EntitySet="Activity" />
+            <End Role="WorkflowActivityStream" EntitySet="WorkflowActivityStream" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ProjectAc__Activ__3587F3E0" Association="Self.FK__ProjectAc__Activ__3587F3E0">
+            <End Role="ActivityStatus" EntitySet="ActivityStatus" />
+            <End Role="ProjectActivity" EntitySet="ProjectActivity" />
+          </AssociationSet>
+          <AssociationSet Name="FK__WorkFlow__Custom__3A4CA8FD" Association="Self.FK__WorkFlow__Custom__3A4CA8FD">
+            <End Role="Customer" EntitySet="Customer" />
+            <End Role="WorkFlow" EntitySet="WorkFlow" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProjectUser_ProjectUser" Association="Self.FK_ProjectUser_ProjectUser">
+            <End Role="Customer" EntitySet="Customer" />
+            <End Role="ProjectUser" EntitySet="ProjectUser" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Project__Project__32AB8735" Association="Self.FK__Project__Project__32AB8735">
+            <End Role="ProjectStatus" EntitySet="ProjectStatus" />
+            <End Role="Project" EntitySet="Project" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Project__Workflo__339FAB6E" Association="Self.FK__Project__Workflo__339FAB6E">
+            <End Role="WorkFlow" EntitySet="WorkFlow" />
+            <End Role="Project" EntitySet="Project" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ProjectAc__Proje__367C1819" Association="Self.FK__ProjectAc__Proje__367C1819">
+            <End Role="Project" EntitySet="Project" />
+            <End Role="ProjectActivity" EntitySet="ProjectActivity" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ProjectAc__Proje__3864608B" Association="Self.FK__ProjectAc__Proje__3864608B">
+            <End Role="Project" EntitySet="Project" />
+            <End Role="ProjectActivityConfiguration" EntitySet="ProjectActivityConfiguration" />
+          </AssociationSet>
+          <AssociationSet Name="FK__WorkflowA__Workf__3C34F16F" Association="Self.FK__WorkflowA__Workf__3C34F16F">
+            <End Role="WorkFlow" EntitySet="WorkFlow" />
+            <End Role="WorkflowActivityStream" EntitySet="WorkflowActivityStream" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="WorkflowModelStoreContainer" CdmEntityContainer="WorkflowEntities">
+          <EntitySetMapping Name="Activity">
+            <EntityTypeMapping TypeName="WorkflowModel.Activity">
+              <MappingFragment StoreEntitySet="Activity">
+                <ScalarProperty Name="ActivityId" ColumnName="ActivityId" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="ActivityName" ColumnName="ActivityName" />
+                <ScalarProperty Name="ActivityDescription" ColumnName="ActivityDescription" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ActivityStatus">
+            <EntityTypeMapping TypeName="WorkflowModel.ActivityStatus">
+              <MappingFragment StoreEntitySet="ActivityStatus">
+                <ScalarProperty Name="ActivityStatusId" ColumnName="ActivityStatusId" />
+                <ScalarProperty Name="ActivityStatusName" ColumnName="ActivityStatusName" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Customer">
+            <EntityTypeMapping TypeName="WorkflowModel.Customer">
+              <MappingFragment StoreEntitySet="Customer">
+                <ScalarProperty Name="CustomerEmail" ColumnName="CustomerEmail" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+                <ScalarProperty Name="CustomerAddress" ColumnName="CustomerAddress" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Project">
+            <EntityTypeMapping TypeName="WorkflowModel.Project">
+              <MappingFragment StoreEntitySet="Project">
+                <ScalarProperty Name="ProjectId" ColumnName="ProjectId" />
+                <ScalarProperty Name="ProjectName" ColumnName="ProjectName" />
+                <ScalarProperty Name="ProjectStartDate" ColumnName="ProjectStartDate" />
+                <ScalarProperty Name="ProjectEndDate" ColumnName="ProjectEndDate" />
+                <ScalarProperty Name="ProjectStatusId" ColumnName="ProjectStatusId" />
+                <ScalarProperty Name="WorkflowActivityID" ColumnName="WorkflowActivityID" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProjectActivity">
+            <EntityTypeMapping TypeName="WorkflowModel.ProjectActivity">
+              <MappingFragment StoreEntitySet="ProjectActivity">
+                <ScalarProperty Name="ProjectActivityId" ColumnName="ProjectActivityId" />
+                <ScalarProperty Name="ProjectId" ColumnName="ProjectId" />
+                <ScalarProperty Name="ActivityId" ColumnName="ActivityId" />
+                <ScalarProperty Name="ActivityStatusId" ColumnName="ActivityStatusId" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProjectActivityConfiguration">
+            <EntityTypeMapping TypeName="WorkflowModel.ProjectActivityConfiguration">
+              <MappingFragment StoreEntitySet="ProjectActivityConfiguration">
+                <ScalarProperty Name="ProjectActivityConfigurationId" ColumnName="ProjectActivityConfigurationId" />
+                <ScalarProperty Name="ProjectId" ColumnName="ProjectId" />
+                <ScalarProperty Name="ActivityId" ColumnName="ActivityId" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProjectStatus">
+            <EntityTypeMapping TypeName="WorkflowModel.ProjectStatus">
+              <MappingFragment StoreEntitySet="ProjectStatus">
+                <ScalarProperty Name="ProjectStatusId" ColumnName="ProjectStatusId" />
+                <ScalarProperty Name="ProjectStatusName" ColumnName="ProjectStatusName" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProjectUser">
+            <EntityTypeMapping TypeName="WorkflowModel.ProjectUser">
+              <MappingFragment StoreEntitySet="ProjectUser">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="UserEmail" ColumnName="UserEmail" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="ParentUserEmail" ColumnName="ParentUserEmail" />
+                <ScalarProperty Name="UserPassword" ColumnName="UserPassword" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WorkFlow">
+            <EntityTypeMapping TypeName="WorkflowModel.WorkFlow">
+              <MappingFragment StoreEntitySet="WorkFlow">
+                <ScalarProperty Name="WorkflowID" ColumnName="WorkflowID" />
+                <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
+                <ScalarProperty Name="WorkflowName" ColumnName="WorkflowName" />
+                <ScalarProperty Name="WorkflowDescription" ColumnName="WorkflowDescription" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WorkflowActivityStream">
+            <EntityTypeMapping TypeName="WorkflowModel.WorkflowActivityStream">
+              <MappingFragment StoreEntitySet="WorkflowActivityStream">
+                <ScalarProperty Name="WorkflowActivityStreamID" ColumnName="WorkflowActivityStreamID" />
+                <ScalarProperty Name="WorkflowID" ColumnName="WorkflowID" />
+                <ScalarProperty Name="ActivityID" ColumnName="ActivityID" />
+                <ScalarProperty Name="Predecessor" ColumnName="Predecessor" />
+                <ScalarProperty Name="Successor" ColumnName="Successor" />
+                <ScalarProperty Name="JumpTo" ColumnName="JumpTo" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

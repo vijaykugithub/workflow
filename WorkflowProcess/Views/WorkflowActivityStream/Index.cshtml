@@ -1,0 +1,71 @@
+﻿@model IEnumerable<WorkflowProcess.Data.WorkflowActivityStream>
+
+@{
+    ViewBag.Title = "Index";
+    if (Convert.ToInt32(Session["Role"]) == 3)
+    {
+        Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_LayoutSuperAdmin.cshtml";
+    }
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Predecessor)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Successor)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.JumpTo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UserName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Activity.ActivityName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.WorkFlow.WorkflowName)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Predecessor)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Successor)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.JumpTo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UserName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Activity.ActivityName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.WorkFlow.WorkflowName)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.WorkflowActivityStreamID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.WorkflowActivityStreamID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.WorkflowActivityStreamID })
+        </td>
+    </tr>
+}
+
+</table>

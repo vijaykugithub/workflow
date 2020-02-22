@@ -1,0 +1,59 @@
+﻿@model IEnumerable<WorkflowProcess.Data.WorkFlow>
+
+@{
+    ViewBag.Title = "Index";
+    if (Convert.ToInt32(Session["Role"]) == 3)
+    {
+        Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_LayoutSuperAdmin.cshtml";
+    }
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.WorkflowName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.WorkflowDescription)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UserName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Customer.CustomerName)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.WorkflowName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.WorkflowDescription)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UserName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Customer.CustomerName)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.WorkflowID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.WorkflowID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.WorkflowID })
+        </td>
+    </tr>
+}
+
+</table>

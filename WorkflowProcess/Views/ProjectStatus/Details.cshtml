@@ -1,0 +1,35 @@
+﻿@model WorkflowProcess.Data.ProjectStatus
+
+@{
+    ViewBag.Title = "Details";
+    if (Convert.ToInt32(Session["Role"]) == 3)
+    {
+        Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_LayoutSuperAdmin.cshtml";
+    }
+}
+
+<h2>Details Project Status</h2>
+
+<div>
+    @*<h4>ProjectStatus</h4>*@
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ProjectStatusName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ProjectStatusName)
+        </dd>
+
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ProjectStatusId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
