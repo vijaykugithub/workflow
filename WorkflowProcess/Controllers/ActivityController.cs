@@ -7,24 +7,36 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using WorkflowProcess.Data;
+using WorkflowProcess.Filters;
 using WorkflowProcess.Repository;
+using WorkflowProcess.ViewModels;
 
 namespace WorkflowProcess.Controllers
 {
+    [AuthorizeSuperAdminandAdmin]
     public class ActivityController : Controller
     {
-        private readonly ICustomer _iCustomer;
-        public ActivityController(ICustomer customer)
+        //private readonly ICustomer _iCustomer;
+        public ActivityController()
         {
-            _iCustomer = customer;
+            //_iCustomer = customer;
         }
         private WorkflowEntities db = new WorkflowEntities();
 
         // GET: Activity
         public ActionResult Index()
         {
-            var activity = db.Activity.Include(a => a.Customer);
-            return View(activity.ToList());
+            IEnumerable<Activity> activity;
+            if (Convert.ToInt32(Session["Role"]) == 1)
+            {
+                activity = db.Activity.Include(p => p.Customer).ToList();
+            }
+            else
+            {
+                activity = db.Activity.Include(p => p.Customer).ToList().Where(x => x.UserName == Convert.ToString(Session["Username"])).ToList();
+            }
+          //  var activity = db.Activity.Include(a => a.Customer);
+            return View(activity);
         }
 
         // GET: Activity/Details/5
@@ -54,17 +66,18 @@ namespace WorkflowProcess.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ActivityId,CustomerId,ActivityName,ActivityDescription,UserName")] Activity activity)
+        public ActionResult Create(ActivityModel activityModel)
         {
             if (ModelState.IsValid)
             {
+                var activity = AutoMapper.Mapper.Map<Activity>(activityModel);
+                activity.UserName= Convert.ToString(Session["Username"]);
                 db.Activity.Add(activity);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-
-            ViewBag.CustomerId = new SelectList(db.Customer, "CustomerId", "CustomerName", activity.CustomerId);
-            return View(activity);
+            ViewBag.CustomerId = new SelectList(db.Customer, "CustomerId", "CustomerName", activityModel.CustomerId);
+            return View(activityModel);
         }
 
         // GET: Activity/Edit/5
@@ -88,10 +101,11 @@ namespace WorkflowProcess.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ActivityId,CustomerId,ActivityName,ActivityDescription,UserName")] Activity activity)
+        public ActionResult Edit([Bind(Include = "ActivityId,CustomerId,ActivityName,ActivityDescription")] Activity activity)
         {
             if (ModelState.IsValid)
             {
+                activity.UserName = Convert.ToString(Session["Username"]);
                 db.Entry(activity).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");

@@ -19,6 +19,8 @@ namespace WorkflowProcess.Data
         public Nullable<int> ActivityId { get; set; }
         public Nullable<int> ActivityStatusId { get; set; }
         public string UserName { get; set; }
+        public Nullable<System.DateTime> ActionedOn { get; set; }
+        public string ActionedBy { get; set; }
     
         public virtual Activity Activity { get; set; }
         public virtual ActivityStatus ActivityStatus { get; set; }

@@ -59,19 +59,46 @@ namespace WorkflowProcess.MapperConfig
                 .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())
                 .ForMember(dest => dest.CustomerId, opt => opt.Ignore());
 
-                cfg.CreateMap<ProjectModel, Project>()            
+                cfg.CreateMap<ProjectModel, Project>()
                .ForMember(dest => dest.ProjectName, opt => opt.MapFrom(src => src.ProjectName))
                .ForMember(dest => dest.ProjectStartDate, opt => opt.MapFrom(src => src.ProjectStartDate))
                .ForMember(dest => dest.ProjectEndDate, opt => opt.MapFrom(src => src.ProjectEndDate))
-               .ForMember(dest => dest.ProjectStatusId, opt => opt.MapFrom(src=>src.ProjectStatusId))
-               .ForMember(dest => dest.WorkflowActivityID, opt => opt.MapFrom(src=>src.WorkflowActivityID))
-               .ForMember(dest => dest.ProjectId, opt => opt.Ignore());
+               .ForMember(dest => dest.ProjectStatusId, opt => opt.MapFrom(src => src.ProjectStatusId))
+               .ForMember(dest => dest.WorkflowActivityID, opt => opt.MapFrom(src => src.WorkflowActivityID))
+               .ForMember(dest => dest.ProjectId, opt => opt.MapFrom(src => src.ProjectId))
+               .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserName));
+
+                cfg.CreateMap<WorkFlowModel, WorkFlow>()
+              .ForMember(dest => dest.WorkflowName, opt => opt.MapFrom(src => src.WorkflowName))
+              .ForMember(dest => dest.WorkflowDescription, opt => opt.MapFrom(src => src.WorkflowDescription))
+               .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserName))
+                .ForMember(dest => dest.WorkflowID, opt => opt.MapFrom(src => src.WorkflowID))
+              .ForMember(dest => dest.CustomerID, opt => opt.MapFrom(src => src.CustomerID));
+                //.ForMember(dest => dest.WorkflowID, opt => opt.Ignore());
+
+                cfg.CreateMap<WorkflowActivityStreamModel, WorkflowActivityStream>()
+             .ForMember(dest => dest.WorkflowActivityStreamID, opt => opt.MapFrom(src => src.WorkflowActivityStreamID))
+             .ForMember(dest => dest.ActivityID, opt => opt.MapFrom(src => src.ActivityID))
+              .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserName))
+               .ForMember(dest => dest.JumpTo, opt => opt.MapFrom(src => src.JumpTo))
+               .ForMember(dest => dest.Predecessor, opt => opt.MapFrom(src => src.Predecessor))
+             .ForMember(dest => dest.Successor, opt => opt.MapFrom(src => src.Successor));
 
                 cfg.CreateMap<ProjectActivityModel, ProjectActivity>()
               .ForMember(dest => dest.ActivityId, opt => opt.MapFrom(src => src.ActivityId))
               .ForMember(dest => dest.ProjectId, opt => opt.MapFrom(src => src.ProjectId))
+              .ForMember(dest => dest.ActionedBy, opt => opt.MapFrom(src => src.ActionedBy))
+              .ForMember(dest => dest.ActionedOn, opt => opt.MapFrom(src => src.ActionedOn))
               .ForMember(dest => dest.ActivityStatusId, opt => opt.MapFrom(src => src.ActivityStatusId))
-              .ForMember(dest => dest.ProjectActivityId, opt => opt.Ignore());
+               .ForMember(dest => dest.ProjectActivityId, opt => opt.MapFrom(src => src.ProjectActivityId));
+
+                cfg.CreateMap<ActivityModel, Activity>()
+              //.ForMember(dest => dest.ActivityId, opt => opt.MapFrom(src => src.ActivityId))
+              .ForMember(dest => dest.ActivityName, opt => opt.MapFrom(src => src.ActivityName))
+              .ForMember(dest => dest.CustomerId, opt => opt.MapFrom(src => src.CustomerId))
+               .ForMember(dest => dest.ActivityDescription, opt => opt.MapFrom(src => src.ActivityDescription))
+               .ForMember(dest => dest.ActivityId, opt => opt.MapFrom(src => src.ActivityId));
+                ;
             });
         }
     }

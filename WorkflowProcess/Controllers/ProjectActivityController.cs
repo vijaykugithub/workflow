@@ -71,6 +71,7 @@ namespace WorkflowProcess.Controllers
             if (ModelState.IsValid)
             {
                 var project = AutoMapper.Mapper.Map<ProjectActivity>(projectActivity);
+                project.UserName = Convert.ToString(Session["Username"]);
                 db.ProjectActivity.Add(project);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -111,6 +112,7 @@ namespace WorkflowProcess.Controllers
             {
                 var project = AutoMapper.Mapper.Map<ProjectActivity>(projectActivity);
                 db.Entry(project).State = EntityState.Modified;
+                project.UserName = Convert.ToString(Session["Username"]);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }

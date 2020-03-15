@@ -15,11 +15,13 @@ namespace WorkflowProcess.ViewModels
         public string ProjectName { get; set; }
         [Required(ErrorMessage = "Project start date required")]
         [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [Display(Name = "Project Start Date")]
         public Nullable<System.DateTime> ProjectStartDate { get; set; }
 
         [Required(ErrorMessage = "Project end date required")]
         [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [Display(Name = "Project End Date")]
         public Nullable<System.DateTime> ProjectEndDate { get; set; }
         [Display(Name ="ProjectStatus Name")]

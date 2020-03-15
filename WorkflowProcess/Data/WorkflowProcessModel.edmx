@@ -57,6 +57,8 @@
           <Property Name="ActivityId" Type="int" />
           <Property Name="ActivityStatusId" Type="int" />
           <Property Name="UserName" Type="nvarchar" MaxLength="50" />
+          <Property Name="ActionedOn" Type="datetime" />
+          <Property Name="ActionedBy" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="ProjectActivityConfiguration">
           <Key>
@@ -383,6 +385,8 @@
           <NavigationProperty Name="Activity" Relationship="Self.FK__ProjectAc__Activ__3493CFA7" FromRole="ProjectActivity" ToRole="Activity" />
           <NavigationProperty Name="ActivityStatus" Relationship="Self.FK__ProjectAc__Activ__3587F3E0" FromRole="ProjectActivity" ToRole="ActivityStatus" />
           <NavigationProperty Name="Project" Relationship="Self.FK__ProjectAc__Proje__367C1819" FromRole="ProjectActivity" ToRole="Project" />
+          <Property Name="ActionedOn" Type="DateTime" Precision="3" />
+          <Property Name="ActionedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="ProjectActivityConfiguration">
           <Key>
@@ -703,6 +707,8 @@
           <EntitySetMapping Name="ProjectActivity">
             <EntityTypeMapping TypeName="WorkflowModel.ProjectActivity">
               <MappingFragment StoreEntitySet="ProjectActivity">
+                <ScalarProperty Name="ActionedBy" ColumnName="ActionedBy" />
+                <ScalarProperty Name="ActionedOn" ColumnName="ActionedOn" />
                 <ScalarProperty Name="ProjectActivityId" ColumnName="ProjectActivityId" />
                 <ScalarProperty Name="ProjectId" ColumnName="ProjectId" />
                 <ScalarProperty Name="ActivityId" ColumnName="ActivityId" />

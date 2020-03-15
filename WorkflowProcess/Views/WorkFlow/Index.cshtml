@@ -12,7 +12,7 @@
     }
 }
 
-<h2>Index</h2>
+<h2>WorkFlow</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -24,9 +24,6 @@
         </th>
         <th>
             @Html.DisplayNameFor(model => model.WorkflowDescription)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UserName)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Customer.CustomerName)
@@ -43,14 +40,11 @@
             @Html.DisplayFor(modelItem => item.WorkflowDescription)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.UserName)
-        </td>
-        <td>
             @Html.DisplayFor(modelItem => item.Customer.CustomerName)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.WorkflowID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.WorkflowID }) |
+            @*@Html.ActionLink("Details", "Details", new { id=item.WorkflowID }) |*@
             @Html.ActionLink("Delete", "Delete", new { id=item.WorkflowID })
         </td>
     </tr>

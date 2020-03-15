@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActivityModel.cs" />
     <Compile Include="AssignViewModel.cs" />
     <Compile Include="AssignViewUserRoleModel.cs" />
     <Compile Include="CreateUserViewModel.cs" />
@@ -55,6 +56,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UsermasterViewModel.cs" />
     <Compile Include="ViewRoleModel.cs" />
+    <Compile Include="WorkflowActivityStreamModel.cs" />
+    <Compile Include="WorkFlowModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WorkflowProcess.Models\WorkflowProcess.Models.csproj">

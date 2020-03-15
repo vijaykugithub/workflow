@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_LayoutSuperAdmin.cshtml";
 }
 
-<h2>Index</h2>
+<h2>Customer</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -38,7 +38,7 @@
             </td>
             <td>
                 @Html.ActionLink("Edit", "Edit", new { id = item.CustomerId }) |
-                @Html.ActionLink("Details", "Details", new { id = item.CustomerId }) |
+                @*@Html.ActionLink("Details", "Details", new { id = item.CustomerId }) |*@
                 @Html.ActionLink("Delete", "Delete", new { id = item.CustomerId })
             </td>
         </tr>

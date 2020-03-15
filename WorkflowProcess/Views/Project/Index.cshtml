@@ -16,7 +16,7 @@
     }
 }
 
-<h2>Index</h2>
+<h2>Project</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -44,7 +44,14 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.ProjectName)
+            @*@Html.ActionLink(Html.DisplayFor(modelItem => item.ProjectName).ToString(), // <-- Link text
+         "Details", // <-- Action Method Name
+         new {@class="ui-btn DisplayDetails"} // <-- htmlArguments
+        )*@
+
+            @*@Html.ActionLink(Html.DisplayFor(modelItem => item.ProjectName).ToString(), "Details", new { id = item.WorkFlow.WorkflowID, @class = "ui-btn DisplayDetails" })*@
+            <a href="#" data-id="@item.WorkFlow.WorkflowID" class="js-reload-details">@item.ProjectName</a>
+            @*<button type="button" data-id="@item.WorkFlow.WorkflowID" class="js-reload-details">@item.ProjectName</button>*@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.ProjectStartDate)
@@ -60,10 +67,37 @@
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.ProjectId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ProjectId }) |
+            @*@Html.ActionLink("Details", "Details", new { id=item.ProjectId }) |*@
             @Html.ActionLink("Delete", "Delete", new { id=item.ProjectId })
         </td>
     </tr>
 }
 
 </table>
+<div id="detailsDiv"></div>
+@*<script>
+$(function(){
+    $(".DisplayDetails").click(function(){
+        var workflowId = $(this).data("id");
+        $.ajax({
+            method: "GET",
+            url: "", 
+            data: { id: workflowId },
+            cache: false,
+            success: function(e){
+                $(".js-bus-details").html(e);
+            }
+        });
+    })
+})
+</script>*@
+<script>
+    $(document).ready(function () {
+    var url = '@Url.Action("WorkFlowDetail", "Project")'
+        $('.js-reload-details').click(function () {
+            $.get(url, { id: $(this).data('id') }, function (data) {
+                $('#detailsDiv').html(data);
+            });
+        });
+        });
+</script>

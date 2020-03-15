@@ -1,5 +1,12 @@
 ﻿@{
-    Layout = "~/Views/Shared/_LayoutSuperAdmin.cshtml";
+    if (Convert.ToInt32(Session["Role"]) == 3)
+    {
+        Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_LayoutSuperAdmin.cshtml";
+    }
 }
 
 

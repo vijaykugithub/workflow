@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using WorkflowProcess.Data;
+using WorkflowProcess.ViewModels;
 
 namespace WorkflowProcess.Controllers
 {
@@ -17,8 +18,16 @@ namespace WorkflowProcess.Controllers
         // GET: WorkflowActivityStream
         public ActionResult Index()
         {
-            var workflowActivityStream = db.WorkflowActivityStream.Include(w => w.Activity).Include(w => w.WorkFlow);
-            return View(workflowActivityStream.ToList());
+            IEnumerable<WorkflowActivityStream> workflowActivityStream;
+            if (Convert.ToInt32(Session["Role"]) == 1)
+            {
+                workflowActivityStream = db.WorkflowActivityStream.Include(w => w.Activity).Include(w => w.WorkFlow).ToList();
+            }
+            else
+            {
+                workflowActivityStream = db.WorkflowActivityStream.Include(w => w.Activity).Include(w => w.WorkFlow).ToList().Where(x => x.UserName == Convert.ToString(Session["Username"])).ToList();
+            }
+            return View(workflowActivityStream);
         }
 
         // GET: WorkflowActivityStream/Details/5
@@ -49,18 +58,20 @@ namespace WorkflowProcess.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "WorkflowActivityStreamID,WorkflowID,ActivityID,Predecessor,Successor,JumpTo,UserName")] WorkflowActivityStream workflowActivityStream)
+        public ActionResult Create(WorkflowActivityStreamModel workflowActivityStreamModel)
         {
             if (ModelState.IsValid)
             {
+                var workflowActivityStream = AutoMapper.Mapper.Map<WorkflowActivityStream>(workflowActivityStreamModel);
+                workflowActivityStream.UserName = Convert.ToString(Session["Username"]);
                 db.WorkflowActivityStream.Add(workflowActivityStream);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.ActivityID = new SelectList(db.Activity, "ActivityId", "ActivityName", workflowActivityStream.ActivityID);
-            ViewBag.WorkflowID = new SelectList(db.WorkFlow, "WorkflowID", "WorkflowName", workflowActivityStream.WorkflowID);
-            return View(workflowActivityStream);
+            ViewBag.ActivityID = new SelectList(db.Activity, "ActivityId", "ActivityName", workflowActivityStreamModel.ActivityID);
+            ViewBag.WorkflowID = new SelectList(db.WorkFlow, "WorkflowID", "WorkflowName", workflowActivityStreamModel.WorkflowID);
+            return View(workflowActivityStreamModel);
         }
 
         // GET: WorkflowActivityStream/Edit/5
@@ -71,13 +82,14 @@ namespace WorkflowProcess.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             WorkflowActivityStream workflowActivityStream = db.WorkflowActivityStream.Find(id);
-            if (workflowActivityStream == null)
+            var workflowActivityStreams = AutoMapper.Mapper.Map<WorkflowActivityStreamModel>(workflowActivityStream);
+            if (workflowActivityStreams == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.ActivityID = new SelectList(db.Activity, "ActivityId", "ActivityName", workflowActivityStream.ActivityID);
-            ViewBag.WorkflowID = new SelectList(db.WorkFlow, "WorkflowID", "WorkflowName", workflowActivityStream.WorkflowID);
-            return View(workflowActivityStream);
+            ViewBag.ActivityID = new SelectList(db.Activity, "ActivityId", "ActivityName", workflowActivityStreams.ActivityID);
+            ViewBag.WorkflowID = new SelectList(db.WorkFlow, "WorkflowID", "WorkflowName", workflowActivityStreams.WorkflowID);
+            return View(workflowActivityStreams);
         }
 
         // POST: WorkflowActivityStream/Edit/5
@@ -85,17 +97,19 @@ namespace WorkflowProcess.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "WorkflowActivityStreamID,WorkflowID,ActivityID,Predecessor,Successor,JumpTo,UserName")] WorkflowActivityStream workflowActivityStream)
+        public ActionResult Edit(WorkflowActivityStreamModel workflowActivityStreamModel)
         {
             if (ModelState.IsValid)
             {
+                var workflowActivityStream = AutoMapper.Mapper.Map<WorkflowActivityStream>(workflowActivityStreamModel);
+                workflowActivityStream.UserName = Convert.ToString(Session["Username"]);
                 db.Entry(workflowActivityStream).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.ActivityID = new SelectList(db.Activity, "ActivityId", "ActivityName", workflowActivityStream.ActivityID);
-            ViewBag.WorkflowID = new SelectList(db.WorkFlow, "WorkflowID", "WorkflowName", workflowActivityStream.WorkflowID);
-            return View(workflowActivityStream);
+            ViewBag.ActivityID = new SelectList(db.Activity, "ActivityId", "ActivityName", workflowActivityStreamModel.ActivityID);
+            ViewBag.WorkflowID = new SelectList(db.WorkFlow, "WorkflowID", "WorkflowName", workflowActivityStreamModel.WorkflowID);
+            return View(workflowActivityStreamModel);
         }
 
         // GET: WorkflowActivityStream/Delete/5

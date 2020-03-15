@@ -12,7 +12,7 @@
     }
 }
 
-<h2>Index</h2>
+<h2>ActivityStatus</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -21,9 +21,6 @@
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.ActivityStatusName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UserName)
         </th>
         <th></th>
     </tr>
@@ -34,11 +31,8 @@
             @Html.DisplayFor(modelItem => item.ActivityStatusName)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.UserName)
-        </td>
-        <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.ActivityStatusId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ActivityStatusId }) |
+            @*@Html.ActionLink("Details", "Details", new { id=item.ActivityStatusId }) |*@
             @Html.ActionLink("Delete", "Delete", new { id=item.ActivityStatusId })
         </td>
     </tr>

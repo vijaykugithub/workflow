@@ -1,7 +1,14 @@
 ﻿@model WorkflowProcess.ViewModels.CreateUserViewModel
 @{
     ViewBag.Title = "Create";
-    Layout = "~/Views/Shared/_LayoutSuperAdmin.cshtml";
+    if (Convert.ToInt32(Session["Role"]) == 3)
+    {
+        Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_LayoutSuperAdmin.cshtml";
+    }
 }
 
 
@@ -40,7 +47,7 @@
                 </div>
             </div>
 
-            <div class="row">
+            @*<div class="row">
                 <div class="clearfix"></div>
                 <div class="col-lg-6" style="margin-top:20px;">
                     @Html.LabelFor(model => model.Gender, htmlAttributes: new { @class = "control-label manadatory" })
@@ -48,18 +55,18 @@
                     @Html.RadioButtonFor(model => model.Gender, "F") @Html.Label("", "Female")
                     <br />
                     @Html.ValidationMessageFor(model => model.Gender, "", new { @class = "text-danger" })
-                </div>
+                </div>*@
                 @*<div class="col-lg-4">
             @Html.LabelFor(model => model.MobileNo, htmlAttributes: new { @class = "control-label" })
             @Html.TextBoxFor(model => model.MobileNo, new { @class = "form-control", @maxlength = 10 })
             @Html.ValidationMessageFor(model => model.MobileNo, "", new { @class = "text-danger" })
         </div>*@
-                <div class="col-lg-6">
+                @*<div class="col-lg-6">
                     @Html.LabelFor(model => model.UserName, htmlAttributes: new { @class = "control-label manadatory" })
                     @Html.TextBoxFor(model => model.UserName, new { @class = "form-control", @maxlength = 20, @onkeypress = "return onlyspecchar(event);" })
                     @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
                 </div>
-            </div>
+            </div>*@
             <div class="row">
                 <div class="col-lg-6">
                     @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label manadatory" })

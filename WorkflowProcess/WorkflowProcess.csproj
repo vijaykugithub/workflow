@@ -274,6 +274,9 @@
     <Content Include="Data\WorkflowProcessModel.edmx.diagram">
       <DependentUpon>WorkflowProcessModel.edmx</DependentUpon>
     </Content>
+    <None Include="Properties\PublishProfiles\WorkflowPack - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\WorkflowPack - ReadOnly - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\WorkflowPack - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Content\dataTablesContent\dataTables.bootstrap.min.css" />
     <Content Include="Scripts\dataTablesScripts\dataTables.bootstrap4.min.js" />

@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using WorkflowProcess.Data;
+using WorkflowProcess.ViewModels;
 
 namespace WorkflowProcess.Controllers
 {
@@ -17,8 +18,16 @@ namespace WorkflowProcess.Controllers
         // GET: WorkFlow
         public ActionResult Index()
         {
-            var workFlow = db.WorkFlow.Include(w => w.Customer);
-            return View(workFlow.ToList());
+            IEnumerable<WorkFlow> workFlow;
+            if (Convert.ToInt32(Session["Role"]) == 1)
+            {
+                workFlow = db.WorkFlow.Include(w => w.Customer).ToList();
+            }
+            else
+            {
+                workFlow = db.WorkFlow.Include(w => w.Customer).ToList().Where(x => x.UserName == Convert.ToString(Session["Username"])).ToList();
+            }
+            return View(workFlow);
         }
 
         // GET: WorkFlow/Details/5
@@ -48,17 +57,19 @@ namespace WorkflowProcess.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "WorkflowID,CustomerID,WorkflowName,WorkflowDescription,UserName")] WorkFlow workFlow)
+        public ActionResult Create(WorkFlowModel workFlowModel)
         {
             if (ModelState.IsValid)
             {
+                var workFlow = AutoMapper.Mapper.Map<WorkFlow>(workFlowModel);
+                workFlow.UserName = Convert.ToString(Session["Username"]);
                 db.WorkFlow.Add(workFlow);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.CustomerID = new SelectList(db.Customer, "CustomerId", "CustomerName", workFlow.CustomerID);
-            return View(workFlow);
+            ViewBag.CustomerID = new SelectList(db.Customer, "CustomerId", "CustomerName", workFlowModel.CustomerID);
+            return View(workFlowModel);
         }
 
         // GET: WorkFlow/Edit/5
@@ -69,12 +80,14 @@ namespace WorkflowProcess.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             WorkFlow workFlow = db.WorkFlow.Find(id);
-            if (workFlow == null)
+            var workFlows = AutoMapper.Mapper.Map<WorkFlowModel>(workFlow);
+            //workFlowModel = workFlow;
+            if (workFlows == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.CustomerID = new SelectList(db.Customer, "CustomerId", "CustomerName", workFlow.CustomerID);
-            return View(workFlow);
+            ViewBag.CustomerID = new SelectList(db.Customer, "CustomerId", "CustomerName", workFlows.CustomerID);
+            return View(workFlows);
         }
 
         // POST: WorkFlow/Edit/5
@@ -82,16 +95,18 @@ namespace WorkflowProcess.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "WorkflowID,CustomerID,WorkflowName,WorkflowDescription,UserName")] WorkFlow workFlow)
+        public ActionResult Edit(WorkFlowModel workFlowModel)
         {
             if (ModelState.IsValid)
             {
+                var workFlow = AutoMapper.Mapper.Map<WorkFlow>(workFlowModel);
                 db.Entry(workFlow).State = EntityState.Modified;
+                workFlow.UserName = Convert.ToString(Session["Username"]);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.CustomerID = new SelectList(db.Customer, "CustomerId", "CustomerName", workFlow.CustomerID);
-            return View(workFlow);
+            ViewBag.CustomerID = new SelectList(db.Customer, "CustomerId", "CustomerName", workFlowModel.CustomerID);
+            return View(workFlowModel);
         }
 
         // GET: WorkFlow/Delete/5

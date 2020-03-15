@@ -70,6 +70,7 @@ namespace WorkflowProcess.Controllers
             if (ModelState.IsValid)
             {
                 var project = AutoMapper.Mapper.Map<Project>(projectModel);
+                project.UserName = Convert.ToString(Session["Username"]);
                 db.Project.Add(project);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -88,13 +89,14 @@ namespace WorkflowProcess.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Project project = db.Project.Find(id);
-            if (project == null)
+            var projects = AutoMapper.Mapper.Map<ProjectModel>(project);
+            if (projects == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.ProjectStatusId = new SelectList(db.ProjectStatus, "ProjectStatusId", "ProjectStatusName", project.ProjectStatusId);
-            ViewBag.WorkflowActivityID = new SelectList(db.WorkFlow, "WorkflowID", "WorkflowName", project.WorkflowActivityID);
-            return View(project);
+            ViewBag.ProjectStatusId = new SelectList(db.ProjectStatus, "ProjectStatusId", "ProjectStatusName", projects.ProjectStatusId);
+            ViewBag.WorkflowActivityID = new SelectList(db.WorkFlow, "WorkflowID", "WorkflowName", projects.WorkflowActivityID);
+            return View(projects);
         }
 
         // POST: Project/Edit/5
@@ -102,17 +104,19 @@ namespace WorkflowProcess.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ProjectId,ProjectName,ProjectStartDate,ProjectEndDate,ProjectStatusId,WorkflowActivityID,UserName")] Project project)
+        public ActionResult Edit( ProjectModel projectModel)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(project).State = EntityState.Modified;
+                var Project = AutoMapper.Mapper.Map<Project>(projectModel);
+                Project.UserName = Convert.ToString(Session["Username"]);
+                db.Entry(Project).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.ProjectStatusId = new SelectList(db.ProjectStatus, "ProjectStatusId", "ProjectStatusName", project.ProjectStatusId);
-            ViewBag.WorkflowActivityID = new SelectList(db.WorkFlow, "WorkflowID", "WorkflowName", project.WorkflowActivityID);
-            return View(project);
+            ViewBag.ProjectStatusId = new SelectList(db.ProjectStatus, "ProjectStatusId", "ProjectStatusName", projectModel.ProjectStatusId);
+            ViewBag.WorkflowActivityID = new SelectList(db.WorkFlow, "WorkflowID", "WorkflowName", projectModel.WorkflowActivityID);
+            return View(projectModel);
         }
 
         // GET: Project/Delete/5
